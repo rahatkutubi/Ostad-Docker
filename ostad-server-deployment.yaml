@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ostad-server
+  namespace: rahat-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ostad-server
+  template:
+    metadata:
+      labels:
+        app: ostad-server
+    spec:
+      containers:
+      - name: ostad-server
+        image: your-dockerhub-username/ostad-server:latest  # Replace accordingly
+        ports:
+        - containerPort: 5000
+        env:
+        - name: MONGO_URI
+          value: "mongodb://mongo:27017/ostad"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ostad-server
+  namespace: rahat-ns
+spec:
+  selector:
+    app: ostad-server
+  ports:
+  - protocol: TCP
+    port: 5000
+    targetPort: 5000
+  type: ClusterIP
